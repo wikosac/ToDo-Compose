@@ -1,6 +1,7 @@
 package com.wikosac.todo_compose
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-class ToDoApplication: Application() {
-}
+@HiltAndroidApp
+class ToDoApplication: Application()
