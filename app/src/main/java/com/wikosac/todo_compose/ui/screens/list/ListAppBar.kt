@@ -1,4 +1,4 @@
-package com.wikosac.todo_compose.ui.screens
+package com.wikosac.todo_compose.ui.screens.list
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height

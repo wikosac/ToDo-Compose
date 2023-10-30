@@ -29,3 +29,11 @@ get() = if (isSystemInDarkTheme()) LightGrey else MaterialTheme.colorScheme.prim
 val topAppBarBackgroundColor: Color
 @Composable
 get() = if (isSystemInDarkTheme()) DarkGrey else MaterialTheme.colorScheme.primaryContainer
+
+val taskItemBgColor: Color
+@Composable
+get() = if (isSystemInDarkTheme()) DarkGrey else Color.White
+
+val taskItemTextColor: Color
+@Composable
+get() = if (isSystemInDarkTheme()) LightGrey else DarkGrey

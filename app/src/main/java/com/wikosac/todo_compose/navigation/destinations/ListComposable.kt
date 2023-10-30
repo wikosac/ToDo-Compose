@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.wikosac.todo_compose.ui.screens.ListScreen
+import com.wikosac.todo_compose.ui.screens.list.ListScreen
 import com.wikosac.todo_compose.ui.viewmodels.SharedViewModel
 import com.wikosac.todo_compose.util.Constants.LIST_ARGUMENT_KEY
 import com.wikosac.todo_compose.util.Constants.LIST_SCREEN
