@@ -26,9 +26,27 @@ import com.wikosac.todo_compose.data.models.Priority
 import com.wikosac.todo_compose.data.models.ToDoTask
 import com.wikosac.todo_compose.ui.theme.taskItemBgColor
 import com.wikosac.todo_compose.ui.theme.taskItemTextColor
+import com.wikosac.todo_compose.util.RequestState
 
 @Composable
 fun ListContent(
+    tasks: RequestState<List<ToDoTask>>,
+    navigateToTaskScreen: (taskId: Int) -> Unit
+) {
+    if (tasks is RequestState.Success) {
+        if (tasks.data.isEmpty()) {
+            EmptyContent()
+        } else {
+            DisplayTasks(
+                tasks = tasks.data,
+                navigateToTaskScreen = navigateToTaskScreen
+            )
+        }
+    }
+}
+
+@Composable
+fun DisplayTasks(
     tasks: List<ToDoTask>,
     navigateToTaskScreen: (taskId: Int) -> Unit
 ) {
