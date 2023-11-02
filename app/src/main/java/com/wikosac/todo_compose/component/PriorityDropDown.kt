@@ -2,6 +2,7 @@ package com.wikosac.todo_compose.component
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -44,9 +45,14 @@ fun PriorityDropDown(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
             .height(60.dp)
             .clickable { expanded = true }
-            .border(1.dp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = DefaultAlpha)),
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = DefaultAlpha),
+                shape = MaterialTheme.shapes.small
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Canvas(
@@ -75,7 +81,7 @@ fun PriorityDropDown(
             )
         }
         DropdownMenu(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(fraction = 0.94f),
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
