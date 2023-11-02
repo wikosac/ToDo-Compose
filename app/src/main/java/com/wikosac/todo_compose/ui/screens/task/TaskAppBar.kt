@@ -24,9 +24,18 @@ import com.wikosac.todo_compose.util.Action
 
 @Composable
 fun TaskAppBar(
+    selectedTask: ToDoTask?,
     navigateToListScreen: (Action) -> Unit
 ) {
-    NewTaskAppBar(navigateToListScreen = navigateToListScreen)
+    if (selectedTask == null) {
+        NewTaskAppBar(navigateToListScreen = navigateToListScreen)
+
+    } else {
+        ExistingTaskAppBar(
+            toDoTask = selectedTask,
+            navigateToListScreen = navigateToListScreen
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
