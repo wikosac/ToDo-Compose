@@ -1,11 +1,14 @@
 package com.wikosac.todo_compose.ui.screens.task
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.wikosac.todo_compose.data.models.Priority
 import com.wikosac.todo_compose.data.models.ToDoTask
 import com.wikosac.todo_compose.ui.viewmodels.SharedViewModel
@@ -21,11 +24,23 @@ fun TaskScreen(
     val description: String by sharedViewModel.description
     val priority: Priority by sharedViewModel.priority
 
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TaskAppBar(
                 selectedTask = selectedTask,
-                navigateToListScreen = navigateToListScreen
+                navigateToListScreen = { action ->
+                    if (action == Action.NO_ACTION) {
+                        navigateToListScreen(action)
+                    } else {
+                        if (sharedViewModel.validateFields()) {
+                            navigateToListScreen(action)
+                        } else {
+                            displayToast(context)
+                        }
+                    }
+                }
             )
         },
         content = {
@@ -35,7 +50,7 @@ fun TaskScreen(
                 TaskContent(
                     title = title,
                     onTitleChange = { newTitle ->
-                        sharedViewModel.title.value = newTitle
+                        sharedViewModel.updateTitle(newTitle)
                     },
                     description = description,
                     onDescriptionChange = { newDesc ->
@@ -49,4 +64,8 @@ fun TaskScreen(
             }
         }
     )
+}
+
+fun displayToast(context: Context) {
+    Toast.makeText(context, "Fields empty", Toast.LENGTH_SHORT).show()
 }
