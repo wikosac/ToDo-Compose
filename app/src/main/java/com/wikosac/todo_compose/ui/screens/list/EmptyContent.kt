@@ -19,8 +19,7 @@ import com.wikosac.todo_compose.ui.theme.MediumGrey
 fun EmptyContent() {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primaryContainer),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

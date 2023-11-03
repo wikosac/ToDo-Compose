@@ -33,7 +33,6 @@ fun ListScreen(
     navigateToTaskScreen: (Int) -> Unit, sharedViewModel: SharedViewModel
 ) {
     LaunchedEffect(key1 = true, block = {
-        Log.d("ListScreen", "ListScreen: lauch effect triggered")
         sharedViewModel.getAllTasks()
     })
 
@@ -55,11 +54,7 @@ fun ListScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            ListAppBar(
-                sharedViewModel,
-                searchAppBarState,
-                searchTextState
-            )
+            ListAppBar(sharedViewModel, searchAppBarState, searchTextState)
         },
         content = {
             Box(modifier = Modifier.padding(it)) {
@@ -109,7 +104,7 @@ fun DisplaySnackbar(
         if (action != Action.NO_ACTION) {
             scope.launch {
                 val snackbarResult = snackbarHostState.showSnackbar(
-                    message = "${action.name}: $taskTitle",
+                    message = setMessage(action, taskTitle),
                     actionLabel = setActionLabel(action)
                 )
                 undoDeletedTask(
@@ -122,14 +117,19 @@ fun DisplaySnackbar(
     })
 }
 
+private fun setMessage(action: Action, taskTitle: String): String {
+    return when (action) {
+        Action.DELETE_ALL -> "All tasks removed."
+        else -> "${action.name}: $taskTitle"
+    }
+}
+
 private fun setActionLabel(action: Action): String {
     return if (action == Action.DELETE) "UNDO" else "OK"
 }
 
 private fun undoDeletedTask(
-    action: Action,
-    snackbarResult: SnackbarResult,
-    onUndoClicked: (Action) -> Unit
+    action: Action, snackbarResult: SnackbarResult, onUndoClicked: (Action) -> Unit
 ) {
     if (snackbarResult == SnackbarResult.ActionPerformed && action == Action.DELETE) {
         onUndoClicked(Action.UNDO)
