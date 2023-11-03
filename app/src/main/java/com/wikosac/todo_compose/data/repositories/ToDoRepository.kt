@@ -33,8 +33,8 @@ class ToDoRepository @Inject constructor(private val  toDoDao: ToDoDao) {
         toDoDao.deleteAllTasks()
     }
 
-    fun searchDatabase(seachQuery: String): Flow<List<ToDoTask>> {
-        return toDoDao.searchDatabase(seachQuery)
+    fun searchDatabase(searchQuery: String): Flow<List<ToDoTask>> {
+        return toDoDao.searchDatabase(searchQuery)
     }
 
 }
