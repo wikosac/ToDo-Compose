@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,18 +37,16 @@ fun ListScreen(
         sharedViewModel.getAllTasks()
     })
 
-
     val allTasks by sharedViewModel.allTasks.collectAsState()
     val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
     val searchTextState: String by sharedViewModel.searchTextState
-
     val action by sharedViewModel.action
-
     val snackbarHostState = remember { SnackbarHostState() }
-    
+
     DisplaySnackbar(
         snackbarHostState = snackbarHostState,
         handleDatabaseActions = { sharedViewModel.handleDatabaseActions(action) },
+        onUndoClicked = { sharedViewModel.action.value = it },
         taskTitle = sharedViewModel.title.value,
         action = action
     )
@@ -96,6 +95,7 @@ fun ListFab(
 fun DisplaySnackbar(
     snackbarHostState: SnackbarHostState,
     handleDatabaseActions: () -> Unit,
+    onUndoClicked: (Action) -> Unit,
     taskTitle: String,
     action: Action
 ) {
@@ -107,9 +107,28 @@ fun DisplaySnackbar(
             scope.launch {
                 val snackbarResult = snackbarHostState.showSnackbar(
                     message = "${action.name}: $taskTitle",
-                    actionLabel = "OK"
+                    actionLabel = setActionLabel(action)
+                )
+                undoDeletedTask(
+                    action = action,
+                    snackbarResult = snackbarResult,
+                    onUndoClicked = onUndoClicked
                 )
             }
         }
     })
+}
+
+private fun setActionLabel(action: Action): String {
+    return if (action == Action.DELETE) "UNDO" else "OK"
+}
+
+private fun undoDeletedTask(
+    action: Action,
+    snackbarResult: SnackbarResult,
+    onUndoClicked: (Action) -> Unit
+) {
+    if (snackbarResult == SnackbarResult.ActionPerformed && action == Action.DELETE) {
+        onUndoClicked(Action.UNDO)
+    }
 }
