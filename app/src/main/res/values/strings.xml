@@ -13,4 +13,10 @@
     <string name="drop_down_arrow_icon">Drop-Down Arrow Icon</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="delete_task">Remove \'%1$s\'?</string>
+    <string name="delete_task_confirm">Are you sure want to remove \'%1$s\'?</string>
+    <string name="delete_all_tasks">Remove all tasks?</string>
+    <string name="delete_all_tasks_confirm">Are you sure want to remove all tasks?</string>
 </resources>

@@ -12,10 +12,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.wikosac.todo_compose.R
+import com.wikosac.todo_compose.component.DisplayAlertDialog
 import com.wikosac.todo_compose.data.models.Priority
 import com.wikosac.todo_compose.data.models.ToDoTask
 import com.wikosac.todo_compose.ui.theme.topAppBarBackgroundColor
@@ -32,7 +37,7 @@ fun TaskAppBar(
 
     } else {
         ExistingTaskAppBar(
-            toDoTask = selectedTask,
+            selectedTask = selectedTask,
             navigateToListScreen = navigateToListScreen
         )
     }
@@ -84,13 +89,13 @@ fun AddAction(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExistingTaskAppBar(
-    toDoTask: ToDoTask,
+    selectedTask: ToDoTask,
     navigateToListScreen: (Action) -> Unit
 ) {
     TopAppBar(
         title = {
             Text(
-                text = toDoTask.title,
+                text = selectedTask.title,
                 color = topAppBarContentColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -101,10 +106,31 @@ fun ExistingTaskAppBar(
         },
         colors = TopAppBarDefaults.topAppBarColors(containerColor = topAppBarBackgroundColor),
         actions = {
-            DeleteAction(onDeleteClicked = navigateToListScreen)
-            UpdateAction(onUpdateClicked = navigateToListScreen)
+            ExistingTaskAppBarActions(
+                selectedTask = selectedTask,
+                navigateToListScreen = navigateToListScreen
+            )
         }
     )
+}
+
+@Composable
+fun ExistingTaskAppBarActions(
+    selectedTask: ToDoTask,
+    navigateToListScreen: (Action) -> Unit
+) {
+    var openDialog by remember { mutableStateOf(false) }
+
+    DisplayAlertDialog(
+        title = stringResource(id = R.string.delete_task, selectedTask.title),
+        message = stringResource(id = R.string.delete_task_confirm, selectedTask.title),
+        openDialog = openDialog,
+        closeDialog = { openDialog = false },
+        onYesClicked = { navigateToListScreen(Action.DELETE) }
+    )
+
+    DeleteAction(onDeleteClicked = { openDialog = true })
+    UpdateAction(onUpdateClicked = navigateToListScreen)
 }
 
 @Composable
@@ -122,9 +148,9 @@ fun CloseAction(
 
 @Composable
 fun DeleteAction(
-    onDeleteClicked: (Action) -> Unit
+    onDeleteClicked: () -> Unit
 ) {
-    IconButton(onClick = { onDeleteClicked(Action.DELETE) }) {
+    IconButton(onClick = { onDeleteClicked() }) {
         Icon(
             imageVector = Icons.Filled.Delete,
             contentDescription = stringResource(R.string.delete_icon),
@@ -157,7 +183,7 @@ fun NewTaskAppBarPreview() {
 @Preview
 fun ExistingTaskAppBarPreview() {
     ExistingTaskAppBar(
-        toDoTask = ToDoTask(
+        selectedTask = ToDoTask(
             0, "Task 4", "Desc", Priority.NONE
         ),
         navigateToListScreen = {}
